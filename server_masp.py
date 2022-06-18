@@ -69,6 +69,26 @@ def examvalue():
     connection()
     return
 
+def main():
+    print("What would you like to operate: \n"
+          "1. Enumeration \n"
+          "2. Attack")
+
+    while True:
+        try:
+            main_input = int(input(""))
+            break
+        except:
+            print("We only accept integer value!")
+
+    if main_input == 1:
+        examvalue()
+    elif main_input == 2:
+        print("Work in Progress")
+    else:
+        print("Not an option")
+
+
 
 startconn()
-examvalue()
+main()
