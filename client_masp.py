@@ -3,6 +3,7 @@ import win32security
 import win32com.client, time
 import platform
 import psutil
+import subprocess
 strComputer = "."
 objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
@@ -116,8 +117,10 @@ while close:
         test = ["Memory Available: ", psutil.virtual_memory().available]
         data_string = pickle.dumps(test)
         client.send(data_string)
-
-
+    elif value == "F1":
+        test = [subprocess.check_call('netsh advfirewall show allprofiles')]
+        data_string = pickle.dumps(test)
+        client.send(data_string)
 
 
 
