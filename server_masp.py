@@ -41,8 +41,7 @@ def connection(ActualValue):
 
         print(2 * '\n')
         break
-    return
-    #enumvalue()
+    enumvalue()
 
 def enumvalue():
     value = ""
