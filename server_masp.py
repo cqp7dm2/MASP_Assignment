@@ -1,12 +1,12 @@
 import socket, pickle, random, time, sys,netifaces
 
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#server_ip = netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']  APPLY THIS ONLY TO LINUX
+#server_ip = netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']  #APPLY THIS ONLY TO LINUX
 
 ActualValue = ""
 
 def startconn():
-    serv.bind(('127.0.0.1', 2023))                ###<<<<<< REPLACE 127.0.0.1 with server_ip
+    serv.bind(("127.0.0.1", 2023))                ###<<<<<< REPLACE 127.0.0.1 with server_ip
     serv.listen(5)
     print(f"Server On ")
     global conn, addr
@@ -15,32 +15,34 @@ def startconn():
 
 def connection(ActualValue):
     while True:
-        from_client = ''
-        print(ActualValue)
+        from_client = b''
         conn.send(bytes(ActualValue, 'utf8'))
-        data = conn.recv(99999)
+        data = conn.recv(999999)
         if not data: break
-        if ActualValue == "F1" or ActualValue == "F2":
-            print(data.decode('utf-8'))
-            from_client += str(data)
-            main()
-        else:
-            data_variable = pickle.loads(data)
-            if ActualValue == 'C3':
-                index = 1
-                print("No", "|", "Name")
-                for excess in data_variable:
-                    print(index, "|", excess.name())
-                    index = index + 1
-                from_client += str(data)
-            else:
-                listToStr = ' '.join([str(elem) for elem in data_variable])
-                print(listToStr)
-                from_client += str(data)
-
-
-        print(2 * '\n')
+        from_client += data
+        print(from_client)
         break
+    if ActualValue == "F1" or ActualValue == "F2":
+         print(data.decode('utf-8'))
+         from_client += str(data)
+         main()
+    else:
+        data_variable = pickle.loads(from_client)
+        print(data_variable)
+        if ActualValue == 'C3':
+            index = 1
+            print("No", "|", "Name")
+            for excess in data_variable:
+                print(index, "|", excess)
+                index = index + 1
+
+        else:
+            listToStr = ' '.join([str(elem) for elem in data_variable])
+            print(listToStr)
+            from_client += str(data)
+
+
+    print(2 * '\n')
     enumvalue()
 
 def enumvalue():

@@ -1,10 +1,14 @@
-import socket, pickle, os
-import win32security
-import win32com.client, time
-import platform
-import psutil
-import subprocess
 import ctypes
+import os
+import pickle
+import platform
+import socket
+import subprocess
+
+import psutil
+import win32com.client
+import win32security
+
 strComputer = "."
 objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
@@ -120,11 +124,14 @@ while close:
         client.send(data_string)
     elif value == "C3":
         action = list(psutil.win_service_iter())
-        print(action)
-        data_string = pickle.dumps(action)
+        listvalue = []
+        for excess in action:
+            listvalue.append((str(excess.name())))
+
+        data_string = pickle.dumps(listvalue)
         client.send(data_string)
     elif value == "M1":
-        action = ["Memory Status: ", psutil.virtual_memory()]
+        action = ["Memory Status: ", str(psutil.virtual_memory())]
         data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "M2":
