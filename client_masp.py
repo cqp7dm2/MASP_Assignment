@@ -50,10 +50,11 @@ sid = desc.GetSecurityDescriptorOwner()
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     client.connect((SERVERIP, 2023))
-    print("Successfully Connected")
 except:
     print("ERROR WITH CONNECTION")
     exit()
+else:
+    print("Successfully Connected")
 #client.send(bytes('I am Client', 'utf8'))
 close = True
 

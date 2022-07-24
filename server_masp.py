@@ -185,14 +185,16 @@ def main():
     print("What would you like to operate: \n"
           "1. Enumeration \n"
           "2. Attack \n"
-          "3. Firewall Config")
+          "3. Firewall Config \n"
+          "4. Exit")
 
     while True:
         try:
             main_input = int(input(""))
-            break
         except:
             print("We only accept integer value!")
+        else:
+            break
 
     if main_input == 1:
         enumvalue()
@@ -200,6 +202,9 @@ def main():
         attackcommand()
     elif main_input == 3:
         firewall()
+    elif main_input == 4:
+        serv.close()
+        print("Server Close")
     else:
         print("Not an option")
 
