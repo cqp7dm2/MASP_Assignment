@@ -46,7 +46,6 @@ desc = win32security.GetFileSecurity(
 )
 sid = desc.GetSecurityDescriptorOwner()
 
-# https://www.programcreek.com/python/example/71691/win32security.ConvertSidToStringSid
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     client.connect((SERVERIP, 2023))
@@ -55,17 +54,11 @@ except:
     exit()
 else:
     print("Successfully Connected")
-#client.send(bytes('I am Client', 'utf8'))
 close = True
 
-username = os.getlogin() #os.environ.get('USERNAME')
+username = os.getlogin()
 expandname = os.path.expanduser('~')
 sidstr = win32security.ConvertSidToStringSid(sid)
-#hostname = socket.gethostname()
-#IPAddr = socket.gethostbyname(hostname)
-#action = ["hostname: ", hostname, '\n', "IPADDRESS: ", IPAddr, '\n']
-#data_string = pickle.dumps(action)
-#client.send(data_string)
 
 
 def isAdmin():
@@ -82,7 +75,6 @@ while close:
     prevalue = from_server.decode('utf-8')
     value = prevalue.split()[0]
     print(value)
-    #print(from_server.decode('utf8'))
     if value == 'E':
         client.close()
         close = False
@@ -94,7 +86,7 @@ while close:
         action = ["SID: ", sidstr]
         data_string = pickle.dumps(action)
         client.send(data_string)
-    elif value == "U4":
+    elif value == "U3":
         action = ["Last Logon: ", logon]
         data_string = pickle.dumps(action)
         client.send(data_string)

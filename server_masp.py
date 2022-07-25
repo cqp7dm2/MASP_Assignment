@@ -14,21 +14,18 @@ def startconn():
     return
 
 def connection(ActualValue):
+    from_client = b''
     while True:
-        from_client = b''
         conn.send(bytes(ActualValue, 'utf8'))
         data = conn.recv(999999)
         if not data: break
         from_client += data
-        print(from_client)
         break
     if ActualValue == "F1" or ActualValue == "F2":
          print(data.decode('utf-8'))
-         from_client += str(data)
          main()
     else:
         data_variable = pickle.loads(from_client)
-        print(data_variable)
         if ActualValue == 'C3':
             index = 1
             print("No", "|", "Name")
@@ -39,7 +36,6 @@ def connection(ActualValue):
         else:
             listToStr = ' '.join([str(elem) for elem in data_variable])
             print(listToStr)
-            from_client += str(data)
 
 
     print(2 * '\n')
@@ -60,8 +56,7 @@ def enumvalue():
     if accepted_command[0] == type:
         print("1. Username \n"
               "2. SID \n"
-              "3. User Full Name ** \n"
-              "4. Last log on \n")
+              "3. Last log on \n")
         value = input("Which value you would like to extract? \n")
     elif accepted_command[1] == type:
         print("1. Machine Name \n"
