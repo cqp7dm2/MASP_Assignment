@@ -9,6 +9,10 @@ import psutil
 import win32com.client
 import win32security
 
+import re
+import uuid
+import ifcfg
+
 strComputer = "."
 objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
@@ -39,7 +43,7 @@ for objItem in colItems:
     if objItem.LastLogon is not None:
          logon = Convert_to_human_time(objItem.LastLogon)
 
-SERVERIP = '127.0.0.1' #EDIT server IP here !!!!!!!!!!!!!!!!!!!
+SERVERIP = '192.168.15.129' #EDIT server IP here !!!!!!!!!!!!!!!!!!!
 
 desc = win32security.GetFileSecurity(
     ".", win32security.OWNER_SECURITY_INFORMATION
@@ -132,7 +136,7 @@ while close:
         data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "N1":
-        action = ["MAC Address: ", uuid.getnode()]
+        action = ["MAC Address: ", ':'.join(re.findall('..', '%012x' % uuid.getnode()))]
         data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "N2":
@@ -140,11 +144,8 @@ while close:
         data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "N3":
-        action = [subprocess.check_output(['ipconfig', '/all']).decode('utf-8').split('\n')]
-        datalist = []
-        for item in action:
-            datalist.append(item.split('\r')[:-1])
-        data_string = pickle.dumps(datalist)
+        action = ["Netmask:", ifcfg.interfaces()]
+        data_string = pickle.dumps(action)
         client.send(data_string)
     elif value == "F1":
         action = subprocess.check_output('netsh advfirewall show allprofiles', shell=True)
